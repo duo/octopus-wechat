@@ -1,0 +1,8 @@
+.vscode
+
+.DS_Store
+
+log/
+vendor/
+
+configure.yaml
