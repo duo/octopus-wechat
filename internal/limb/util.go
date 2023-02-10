@@ -316,7 +316,23 @@ func parseApp(b *Bot, msg *WechatMessage, appType int) *common.AppData {
 			Source:      "",
 			URL:         "",
 		}
-	case 51:
+	case 19: // forward
+		titleNode := xmlquery.FindOne(doc, "/msg/appmsg/title")
+		if titleNode == nil || len(titleNode.InnerText()) == 0 {
+			return nil
+		}
+		var des string
+		desNode := xmlquery.FindOne(doc, "/msg/appmsg/des")
+		if desNode != nil {
+			des = desNode.InnerText()
+		}
+		return &common.AppData{
+			Title:       titleNode.InnerText(),
+			Description: des,
+			Source:      "",
+			URL:         "",
+		}
+	case 51: // video
 		titleNode := xmlquery.FindOne(doc, "/msg/appmsg/finderFeed/nickname")
 		if titleNode == nil || len(titleNode.InnerText()) == 0 {
 			return nil
@@ -328,6 +344,27 @@ func parseApp(b *Bot, msg *WechatMessage, appType int) *common.AppData {
 		}
 		var url string
 		urlNode := xmlquery.FindOne(doc, "/msg/appmsg/finderFeed//fullCoverUrl")
+		if urlNode != nil {
+			url = urlNode.InnerText()
+		}
+		return &common.AppData{
+			Title:       titleNode.InnerText(),
+			Description: des,
+			Source:      titleNode.InnerText(),
+			URL:         url,
+		}
+	case 63: // live
+		titleNode := xmlquery.FindOne(doc, "/msg/appmsg/finderLive/nickname")
+		if titleNode == nil || len(titleNode.InnerText()) == 0 {
+			return nil
+		}
+		var des string
+		desNode := xmlquery.FindOne(doc, "/msg/appmsg/finderLive/desc")
+		if desNode != nil {
+			des = desNode.InnerText()
+		}
+		var url string
+		urlNode := xmlquery.FindOne(doc, "/msg/appmsg/finderLive//coverUrl")
 		if urlNode != nil {
 			url = urlNode.InnerText()
 		}
