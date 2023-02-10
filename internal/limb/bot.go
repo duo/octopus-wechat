@@ -453,7 +453,7 @@ func (b *Bot) processWechatMessage(msg *WechatMessage) {
 			}
 		//case 2000: // Transfer
 		default:
-			app := parseApp(b, msg)
+			app := parseApp(b, msg, appType)
 			if app != nil {
 				event.Type = common.EventApp
 				event.Data = app
@@ -500,6 +500,13 @@ func (b *Bot) processWechatMessage(msg *WechatMessage) {
 		} else {
 			name = info.Nickname
 			remark = info.Remark
+		}
+		if strings.HasSuffix(msg.Sender, "@chatroom") {
+			if groupNickname, err := b.client.GetGroupMemberNickname(msg.Sender, msg.WxID); err != nil {
+				log.Warnf("Failed to get group nickname for %s: %v", msg.WxID, err)
+			} else if groupNickname != "" {
+				remark = groupNickname
+			}
 		}
 		event.From = common.User{
 			ID:       msg.WxID,

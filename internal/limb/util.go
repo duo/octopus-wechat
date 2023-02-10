@@ -298,41 +298,66 @@ func parseNotice(b *Bot, msg *WechatMessage) string {
 	return noticeNode.InnerText()
 }
 
-func parseApp(b *Bot, msg *WechatMessage) *common.AppData {
+func parseApp(b *Bot, msg *WechatMessage, appType int) *common.AppData {
 	doc, err := xmlquery.Parse(strings.NewReader(msg.Message))
 	if err != nil {
 		return nil
 	}
 
-	titleNode := xmlquery.FindOne(doc, "/msg/appmsg/title")
-	if titleNode == nil || len(titleNode.InnerText()) == 0 {
-		return nil
-	}
-	var url string
-	urlNode := xmlquery.FindOne(doc, "/msg/appmsg/url")
-	if urlNode != nil {
-		url = urlNode.InnerText()
-	}
-	var des string
-	desNode := xmlquery.FindOne(doc, "/msg/appmsg/des")
-	if desNode != nil {
-		des = desNode.InnerText()
-	}
-	var source string
-	if sourceNode := xmlquery.FindOne(doc, "/msg/appmsg/sourcedisplayname"); sourceNode != nil {
-		source = sourceNode.InnerText()
-	} else if sourceNode := xmlquery.FindOne(doc, "/msg/appinfo/appname"); sourceNode != nil {
-		source = sourceNode.InnerText()
-	}
-
-	if des == "" {
+	switch appType {
+	case 1:
+		titleNode := xmlquery.FindOne(doc, "/msg/appmsg/title")
+		if titleNode == nil || len(titleNode.InnerText()) == 0 {
+			return nil
+		}
 		return &common.AppData{
-			Title:       source,
+			Title:       "",
 			Description: titleNode.InnerText(),
-			Source:      source,
+			Source:      "",
+			URL:         "",
+		}
+	case 51:
+		titleNode := xmlquery.FindOne(doc, "/msg/appmsg/finderFeed/nickname")
+		if titleNode == nil || len(titleNode.InnerText()) == 0 {
+			return nil
+		}
+		var des string
+		desNode := xmlquery.FindOne(doc, "/msg/appmsg/finderFeed/desc")
+		if desNode != nil {
+			des = desNode.InnerText()
+		}
+		var url string
+		urlNode := xmlquery.FindOne(doc, "/msg/appmsg/finderFeed//fullCoverUrl")
+		if urlNode != nil {
+			url = urlNode.InnerText()
+		}
+		return &common.AppData{
+			Title:       titleNode.InnerText(),
+			Description: des,
+			Source:      titleNode.InnerText(),
 			URL:         url,
 		}
-	} else {
+	default:
+		titleNode := xmlquery.FindOne(doc, "/msg/appmsg/title")
+		if titleNode == nil || len(titleNode.InnerText()) == 0 {
+			return nil
+		}
+		var url string
+		urlNode := xmlquery.FindOne(doc, "/msg/appmsg/url")
+		if urlNode != nil {
+			url = urlNode.InnerText()
+		}
+		var des string
+		desNode := xmlquery.FindOne(doc, "/msg/appmsg/des")
+		if desNode != nil {
+			des = desNode.InnerText()
+		}
+		var source string
+		if sourceNode := xmlquery.FindOne(doc, "/msg/appmsg/sourcedisplayname"); sourceNode != nil {
+			source = sourceNode.InnerText()
+		} else if sourceNode := xmlquery.FindOne(doc, "/msg/appinfo/appname"); sourceNode != nil {
+			source = sourceNode.InnerText()
+		}
 		return &common.AppData{
 			Title:       titleNode.InnerText(),
 			Description: des,
