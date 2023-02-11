@@ -31,23 +31,23 @@ log:
 * Telegram → WeChat
   * [ ] Message types
     * [x] Text
-	* [x] Image
-	* [x] Sticker
-	* [x] Video
-	* [ ] Audio
+    * [x] Image
+    * [x] Sticker
+    * [x] Video
+    * [ ] Audio
     * [x] File
     * [ ] Mention
     * [ ] Reply
     * [ ] Location
   * [ ] Redaction
 
-* QQ → Telegram
+* WeChat → Telegram
   * [ ] Message types
     * [x] Text
-	* [x] Image
-	* [x] Sticker
-	* [x] Video
-	* [x] Audio
+    * [x] Image
+    * [x] Sticker
+    * [x] Video
+    * [x] Audio
     * [x] File
     * [ ] Mention
     * [x] Reply

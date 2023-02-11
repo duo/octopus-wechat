@@ -322,7 +322,7 @@ func (b *Bot) serve() {
 
 // process WeChat message
 func (b *Bot) processWechatMessage(msg *WechatMessage) {
-	//log.Debugf("Receive msg: %+v", msg)
+	log.Debugf("Receive WeChat msg: %+v", msg)
 
 	if b.me == nil {
 		log.Warnln("WeChat processor not ready")
@@ -366,6 +366,13 @@ func (b *Bot) processWechatMessage(msg *WechatMessage) {
 			event.Content = ""
 		} else {
 			event.Content = "[语音下载失败]"
+		}
+	case 42: // Card
+		if card := parseCard(b, msg); card != nil {
+			event.Type = common.EventApp
+			event.Data = card
+		} else {
+			event.Content = "[名片解析失败]"
 		}
 	case 43: // Video
 		if len(msg.FilePath) == 0 && len(msg.Thumbnail) == 0 {

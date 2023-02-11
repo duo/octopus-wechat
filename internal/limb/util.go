@@ -298,6 +298,25 @@ func parseNotice(b *Bot, msg *WechatMessage) string {
 	return noticeNode.InnerText()
 }
 
+func parseCard(b *Bot, msg *WechatMessage) *common.AppData {
+	doc, err := xmlquery.Parse(strings.NewReader(msg.Message))
+	if err != nil {
+		return nil
+	}
+
+	node := xmlquery.FindOne(doc, "/msg")
+	if node == nil {
+		return nil
+	}
+
+	return &common.AppData{
+		Title:       "",
+		Description: node.SelectAttr("nickname"),
+		Source:      node.SelectAttr("nickname"),
+		URL:         node.SelectAttr("bigheadimgurl"),
+	}
+}
+
 func parseApp(b *Bot, msg *WechatMessage, appType int) *common.AppData {
 	doc, err := xmlquery.Parse(strings.NewReader(msg.Message))
 	if err != nil {
