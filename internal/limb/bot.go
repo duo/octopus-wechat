@@ -236,6 +236,8 @@ func (b *Bot) sync() {
 
 // process events from master
 func (b *Bot) processOcotopusEvent(event *common.OctopusEvent) (*common.OctopusEvent, error) {
+	log.Debugf("Receive Octopus event: %+v", event)
+
 	var err error
 	target := event.Chat.ID
 	switch event.Type {
