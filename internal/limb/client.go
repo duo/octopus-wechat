@@ -2,6 +2,7 @@ package limb
 
 import (
 	"bytes"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -41,6 +42,7 @@ const (
 
 	DB_MICRO_MSG      = "MicroMsg.db"
 	DB_OPENIM_CONTACT = "OpenIMContact.db"
+	DB_MEDIA_MSG      = "MediaMSG0.db"
 )
 
 type WechatClient struct {
@@ -470,6 +472,43 @@ func (c *WechatClient) GetGroupList() ([]*GroupInfo, error) {
 	}
 
 	return groups, nil
+}
+
+func (c *WechatClient) GetVoice(msgID uint64) ([]byte, error) {
+	if !c.IsLogin() {
+		return nil, fmt.Errorf("user not logged")
+	}
+
+	var sql string
+
+	handle, err := c.getDbHandleByName(DB_MEDIA_MSG)
+	if err != nil {
+		return nil, err
+	}
+
+	sql = fmt.Sprintf(`SELECT Buf FROM Media WHERE Reserved0 = %d`, msgID)
+
+	jsonSql, err := json.Marshal(map[string]interface{}{
+		"db_handle": handle,
+		"sql":       sql,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	ret, err := post(
+		fmt.Sprintf(CLIENT_API_URL, c.port, WECHAT_DATABASE_QUERY),
+		jsonSql,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	if gjson.GetBytes(ret, "data.#").Int() <= 1 {
+		return nil, nil
+	}
+
+	return base64.StdEncoding.DecodeString(gjson.GetBytes(ret, "data.1.0").String())
 }
 
 func (c *WechatClient) SendText(target string, content string) error {

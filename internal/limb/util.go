@@ -115,6 +115,7 @@ func downloadVoice(b *Bot, msg *WechatMessage) *common.BlobData {
 
 	voiceFile := filepath.Join(b.workdir, msg.Self, path+".amr")
 	for {
+		// check from disk
 		if pathExists(voiceFile) {
 			data, err := os.ReadFile(voiceFile)
 			if err == nil && data != nil {
@@ -122,6 +123,16 @@ func downloadVoice(b *Bot, msg *WechatMessage) *common.BlobData {
 					Name:   filepath.Base(voiceFile),
 					Binary: data,
 				}
+			}
+		}
+
+		// check from db
+		if data, err := b.client.GetVoice(msg.MsgID); err != nil {
+			return nil
+		} else if data != nil {
+			return &common.BlobData{
+				Name:   path + ".amr",
+				Binary: data,
 			}
 		}
 
