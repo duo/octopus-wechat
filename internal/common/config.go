@@ -10,9 +10,9 @@ import (
 const (
 	defaultRequestTimeout = 1 * time.Minute
 	defaultPingInterval   = 30 * time.Second
-	defaultSendTimeout    = 3 * time.Minute
-	defaultSyncDelay      = 1 * time.Minute
-	defaultSyncInterval   = 6 * time.Hour
+	//defaultSendTimeout    = 3 * time.Minute
+	defaultSyncDelay    = 1 * time.Minute
+	defaultSyncInterval = 6 * time.Hour
 )
 
 type Configure struct {
@@ -27,7 +27,7 @@ type Configure struct {
 		Addr         string        `yaml:"addr"`
 		Secret       string        `yaml:"secret"`
 		PingInterval time.Duration `yaml:"ping_interval"`
-		SendTiemout  time.Duration `yaml:"send_timeout"`
+		//SendTiemout  time.Duration `yaml:"send_timeout"`
 		SyncDelay    time.Duration `yaml:"sync_delay"`
 		SyncInterval time.Duration `yaml:"sync_interval"`
 	} `yaml:"service"`
@@ -46,7 +46,7 @@ func LoadConfig(path string) (*Configure, error) {
 	config := &Configure{}
 	config.Limb.RequestTimeout = defaultRequestTimeout
 	config.Service.PingInterval = defaultPingInterval
-	config.Service.SendTiemout = defaultSendTimeout
+	//config.Service.SendTiemout = defaultSendTimeout
 	config.Service.SyncDelay = defaultSyncDelay
 	config.Service.SyncInterval = defaultSyncInterval
 	if err := yaml.Unmarshal(file, &config); err != nil {

@@ -18,7 +18,6 @@ service:
   addr: ws://10.10.10.10:11111 # Required, ocotpus address
   secret: hello # Reuqired, user defined secret
   ping_interval: 30s # Optional
-  send_timeout: 3m # Optional
   sync_delay: 1m # Optional
   sync_interval: 6h # Optional
 
