@@ -4,8 +4,8 @@ go 1.19
 
 require (
 	github.com/antchfx/xmlquery v1.3.15
-	github.com/duo/wsc v0.0.0-20230222025311-77707f7341b5
-	github.com/shirou/gopsutil/v3 v3.23.1
+	github.com/duo/wsc v0.0.0-20230222133338-63777e3dc7a8
+	github.com/shirou/gopsutil/v3 v3.23.2
 	github.com/sirupsen/logrus v1.9.0
 	github.com/tidwall/gjson v1.14.4
 	github.com/tidwall/tinylru v1.1.0

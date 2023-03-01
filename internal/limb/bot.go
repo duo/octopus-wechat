@@ -243,7 +243,7 @@ func (b *Bot) processOcotopusEvent(event *common.OctopusEvent) (*common.OctopusE
 	switch event.Type {
 	case common.EventText:
 		err = b.client.SendText(target, event.Content)
-	case common.EventPhoto, common.EventVideo:
+	case common.EventPhoto, common.EventSticker, common.EventVideo:
 		path := saveBlob(b, event)
 		if len(path) > 0 {
 			err = b.client.SendImage(target, path)
@@ -396,8 +396,8 @@ func (b *Bot) processWechatMessage(msg *WechatMessage) {
 	case 47: // Sticker
 		blob := downloadSticker(b, msg)
 		if blob != nil {
-			event.Type = common.EventPhoto
-			event.Data = []*common.BlobData{blob}
+			event.Type = common.EventSticker
+			event.Data = blob
 			event.Content = ""
 		} else {
 			event.Content = "[表情下载失败]"
@@ -442,8 +442,8 @@ func (b *Bot) processWechatMessage(msg *WechatMessage) {
 			}
 			blob := downloadSticker(b, msg)
 			if blob != nil {
-				event.Type = common.EventPhoto
-				event.Data = []*common.BlobData{blob}
+				event.Type = common.EventSticker
+				event.Data = blob
 				event.Content = ""
 			} else {
 				event.Content = "[表情下载失败]"
