@@ -154,10 +154,15 @@ func NewBot(config *common.Configure, pushFunc func(*common.OctopusEvent)) *Bot 
 		log.Fatal(err)
 	}
 
-	workdir := filepath.Join(getDocDir(), "octopus_wechat")
-	if !pathExists(workdir) {
-		if err := os.MkdirAll(workdir, 0o644); err != nil {
-			log.Fatalf("Failed to create temp folder: %v", err)
+	var workdir string
+	if config.Limb.Workdir != "" {
+		workdir = config.Limb.Workdir
+	} else {
+		workdir = filepath.Join(getDocDir(), "octopus_wechat")
+		if !pathExists(workdir) {
+			if err := os.MkdirAll(workdir, 0o644); err != nil {
+				log.Fatalf("Failed to create temp folder: %v", err)
+			}
 		}
 	}
 

@@ -557,6 +557,15 @@ func pathExists(path string) bool {
 }
 
 func getDocDir() string {
+	// Try get path from registry first
+	regKey, err := registry.OpenKey(registry.CURRENT_USER, "Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders", registry.QUERY_VALUE)
+	if err == nil {
+		path, _, err := regKey.GetStringValue("Personal")
+		if err == nil && path != "" {
+			return path
+		}
+	}
+
 	u, _ := user.Current()
 	baseDir := filepath.Join(u.HomeDir, "Documents")
 

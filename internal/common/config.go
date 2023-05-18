@@ -21,6 +21,7 @@ type Configure struct {
 		ListenPort     int32         `yaml:"listen_port"`
 		HookPort       int32         `yaml:"hook_port"`
 		RequestTimeout time.Duration `yaml:"request_timeout"`
+		Workdir        string        `yaml:"workdir"`
 	} `yaml:"limb"`
 
 	Service struct {
